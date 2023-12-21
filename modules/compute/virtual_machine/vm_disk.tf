@@ -24,6 +24,7 @@ resource "azurerm_managed_disk" "disk" {
   disk_mbps_read_write   = try(each.value.disk.disk_mbps_read_write, null)
   tags                   = merge(local.tags, try(each.value.tags, {}))
   disk_encryption_set_id = try(each.value.disk_encryption_set_key, null) == null ? null : var.disk_encryption_sets[try(each.value.lz_key, var.client_config.landingzone_key)][each.value.disk_encryption_set_key].id
+  source_resource_id     = try(each.value.restored_disk_id, null)
 
   lifecycle {
     ignore_changes = [
