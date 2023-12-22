@@ -11,7 +11,6 @@ data "azurecaf_name" "disk" {
 }
 
 resource "azurerm_managed_disk" "disk" {
-  # for_each = lookup(var.settings, "data_disks", {})
   for_each = { for key, value in try(var.settings.data_disks, {}) : key => value if try(value.restored_disk_id, "") == null}
 
   name                   = data.azurecaf_name.disk[each.key].result

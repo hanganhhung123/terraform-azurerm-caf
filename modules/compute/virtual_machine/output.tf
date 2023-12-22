@@ -65,7 +65,7 @@ output "nics" {
 
 output "data_disks" {
   value = {
-    for key, value in lookup(var.settings, "data_disks", {}) : key => azurerm_managed_disk.disk[key].id
+    for key, value in lookup(var.settings, "data_disks", {}) : key => coalesce(try(value.restored_disk_id, null), try(azurerm_managed_disk.disk[key].id, null))
   }
 }
 
