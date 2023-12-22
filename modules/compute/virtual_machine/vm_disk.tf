@@ -11,7 +11,8 @@ data "azurecaf_name" "disk" {
 }
 
 resource "azurerm_managed_disk" "disk" {
-  for_each = lookup(var.settings, "data_disks", {})
+  # for_each = lookup(var.settings, "data_disks", {})
+  for_each = { for key, val in lookup(var.settings, "data_disks", {}) : key => val if val.restored_disk_id != null}
 
   name                   = data.azurecaf_name.disk[each.key].result
   location               = local.location
@@ -31,7 +32,6 @@ resource "azurerm_managed_disk" "disk" {
       name, #for ASR disk restores
     ]
   }
-
 }
 
 resource "azurerm_virtual_machine_data_disk_attachment" "disk" {
